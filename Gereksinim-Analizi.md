@@ -22,6 +22,6 @@
 21. Kullanıcı içerik fragmanı platform üzerinden izleme (Ensar SARIKAYA)
 
 # Gereksinim Dağılımları
-1. [Kemal AYAN'ın Gereksinimleri](Kemal-AYAN-Gereksinimler.md)
-2. [Gökhan SARIÇİÇEK'in Gereksinimleri](Gökhan-SARIÇİÇEK-Gereksinimler.md)
-3. [Ensar SARIKAYA'nın Gereksinimleri](Ensar-SARIKAYA-Gereksinimler.md)
+1. [Kemal AYAN'ın Gereksinimleri](Kemal-AYAN-Gereksinimleri.md)
+2. [Gökhan SARIÇİÇEK'in Gereksinimleri](Gökhan-SARIÇİÇEK-Gereksinimleri.md)
+3. [Ensar SARIKAYA'nın Gereksinimleri](Ensar-SARIKAYA-Gereksinimleri.md)
