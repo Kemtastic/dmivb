@@ -1,7 +1,7 @@
 #Dijital Medya İçerik Veri Tabanı
 
 **Proje Tanımı: **
-	DMIVb, film, dizi, video oyunları ve müzik albümleri gibi popüler kültür içeriklerini tek bir çatı altında toplayarak, kullanıcı puanlarını karşılaştırmalı olarak sunan bir platformdur. Kullanıcılar, en yeni içeriklerin aldığı puanları inceleyerek bilinçli tercihler yapabilir, kullanıcı yorumlarını okuyarak detaylı analizlere ulaşabilir ve kendi puanlarını vererek topluluğa katkıda bulunabilirler. DMIVb, objektif değerlendirmeleri ve kullanıcı geri bildirimlerini bir araya getirerek, eğlence dünyasındaki en güncel ve güvenilir rehber olmayı amaçlamaktadır.
+	DMIVb, film, ve dizi gibi popüler kültür içeriklerini tek bir çatı altında toplayarak, kullanıcı puanlarını karşılaştırmalı olarak sunan bir platformdur. Kullanıcılar, en yeni içeriklerin aldığı puanları inceleyerek bilinçli tercihler yapabilir, kullanıcı yorumlarını okuyarak detaylı analizlere ulaşabilir ve kendi puanlarını vererek topluluğa katkıda bulunabilirler. DMIVb, objektif değerlendirmeleri ve kullanıcı geri bildirimlerini bir araya getirerek, eğlence dünyasındaki en güncel ve güvenilir rehber olmayı amaçlamaktadır.
 
 **Proje Kategorisi:**
  İnceleme Puanlama Platformu (Review aggregator)
