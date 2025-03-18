@@ -10,4 +10,4 @@
 
 6. **İzleme Geçmişine Göre Öneriler Sunma:** Kullanıcıların izlediği ve puanladığı içeriklere dayalı kişiselleştirilmiş öneriler. Veri analizi veya benzeri algoritmalarla uygulanır. Kullanıcıların yeni içerikler keşfetmesini sağlayarak platforma bağlılığı artırır.
 
-7. **İçerik Fragmanını Platform Üzerinden İzleme:**  Kullanıcıların film/dizi fragmanlarını doğrudan platformda oynatabilmesi. YouTube/Vimeo API entegrasyonu ile çalışır. İçeriklerin daha çekici hale getirilmesi ve kullanıcıların karar vermesini kolaylaştırmak için gereklidir.
+7. **İçerik Fragmanını Platform Üzerinden İzleme:**  Kullanıcıların film/dizi fragmanlarını doğrudan platformda oynatabilmesi. YouTube/Video API entegrasyonu ile çalışır. İçeriklerin daha çekici hale getirilmesi ve kullanıcıların karar vermesini kolaylaştırmak için gereklidir.
