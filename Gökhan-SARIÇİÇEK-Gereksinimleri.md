@@ -2,7 +2,7 @@
 
 2. **Kullanıcı Özel Listeler Oluşturma:** Kullanıcıların "En İyi 90'lar Filmleri" gibi tema tabanlı özel listeler oluşturmasına izin verir. Listeler halka açık veya gizli olarak paylaşılabilir. Topluluk etkileşimini artırmak ve kişisel arşivleme sağlamak için önemlidir.
 
-3. **Kullanıcı İzledikleri İçeriği İşaretleme:** Kullanıcıların izledikleri film/dizileri "İzledim" olarak işaretlemesini sağlar. Bu veri, kişisel istatistiklerde ve öneri algoritmalarında kullanılır. Kullanıcıların takip deneyimini kolaylaştırmak için temel bir özelliktir.
+3. **Kullanıcı İzlenilen İçeriği İşaretleme:** Kullanıcıların izledikleri film/dizileri "İzledim" olarak işaretlemesini sağlar. Bu veri, kişisel istatistiklerde ve öneri algoritmalarında kullanılır. Kullanıcıların takip deneyimini kolaylaştırmak için temel bir özelliktir.
 
 4. **İçeriği Detaylı Bilgilerle Listeleme:** Her içeriğin sayfasında yönetmen, oyuncu kadrosu, senaryo, bütçe, ödüller gibi detayların gösterilmesi. Kullanıcıların içerik hakkında derinlemesine bilgi edinmesini sağlar. Metacritic benzeri bir yapıda veri sunmak için gereklidir.
 
