@@ -16,7 +16,7 @@ export default function RatingSection({ movieId }) {
       <h2 className="text-sm uppercase mb-1 text-gray-600 dark:text-gray-400">
         MY SCORE
       </h2>
-      <p className="mb-2">Click to give a rating</p>
+      <p className="mb-2">Skor ver</p>
 
       {/* Rating boxes */}
       <div className="flex gap-1 mb-4">
