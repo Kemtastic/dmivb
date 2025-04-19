@@ -1,4 +1,4 @@
-(https://dmivb.vercel.app)
+https://dmivb.vercel.app
 
 # Kemal AYAN Frontend #
 1. Üye Ol
