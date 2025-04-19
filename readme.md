@@ -8,7 +8,7 @@
 
 **Referans Uygulama:** [metacritic.com](metacritic.com)
 
-**Uygulama Adresi:** [dmivb.vercel.app](dmivb.vercel.app)
+**Uygulama Adresi:** [dmivb.vercel.app](https://dmivb.vercel.app/)
 
 **Grup Adı:** Default Team
 
