@@ -78,7 +78,7 @@ export default function CarouselSlide() {
                             <Star size={12} className="text-yellow-400 fill-yellow-400" />
                           </div>
                         </div>
-                        <p className="text-[#e5e5e5] text-[0.5rem] m-0 opacity-80 leading-normal">{movie.category}</p>
+                        <p className="text-[#e5e5e5] text-[0.5rem] m-0 opacity-80 leading-normal">{movie.genres.join(' • ')}</p>
                       </div>
                     </div>
                   </div>

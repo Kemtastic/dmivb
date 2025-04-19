@@ -1,12 +1,16 @@
 "use client";
-
 import React from 'react';
-import { YouTubeEmbed } from '@next/third-parties/google'
 
 const YT = ({ id }) => {
   return (
-    <div>
-      <YouTubeEmbed videoid={id} height={400} width={720} />
+    <div className="relative w-full h-full">
+      <iframe
+        src={`https://www.youtube.com/embed/${id}`}
+        title="YouTube video player"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+        className="absolute top-0 left-0 w-full h-full rounded-lg"
+      />
     </div>
   );
 };

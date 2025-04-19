@@ -1,5 +1,6 @@
 // Desc: Custom Logo for DMIVb
 // Usage: <CustomLogo />
+
 export default function CustomLogo() {
     return (
         <>
