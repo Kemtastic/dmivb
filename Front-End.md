@@ -14,9 +14,10 @@ https://dmivb.vercel.app
 2. Navbar Links - Navbar Logo
 3. Search Bar
 4. Movies and Series Carousel Slider
-5. Movies/Series Page tasarim
-6. Movies/Series Page trailer (YouTube embedded trailer videos)
-7. Movies/Series Page Rating (1-10)
-8. Movies/Series Page Post Comment button
-9. Movies/Series Page Comment Reply button
-10. Movies/Series Page Comment Like Button
+5. Movies/Series Page Tasarim
+6. Fragman Izleme (Youtube Embedded)
+7. Icerik Puanlama
+8. Yorum Yapma
+9. Yorum Begenme
+10. Yorum Yanitlama
+11. Oneri Sunma
