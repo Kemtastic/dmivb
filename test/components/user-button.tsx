@@ -94,13 +94,15 @@ export const UserButton = ({ user }: { user: User }) => {
           <DropdownMenuItem>Profil</DropdownMenuItem>
         </Link>
 
-        {user.role == 'admin' && (<Link href={Routes.Pages.App.Admin.Contents}>
-          <DropdownMenuItem>İçeriklerim</DropdownMenuItem>
-        </Link>
-        <Link href={Routes.Pages.App.Admin.NewContent}>
-          <DropdownMenuItem>İçerik oluştur</DropdownMenuItem>
-        </Link>
-        )}
+        {user.role == 'admin' && (
+          <>
+            <Link href={Routes.Pages.App.Admin.Contents}>
+              <DropdownMenuItem>İçeriklerim</DropdownMenuItem>
+            </Link>
+            <Link href={Routes.Pages.App.Admin.NewContent}>
+              <DropdownMenuItem>İçerik oluştur</DropdownMenuItem>
+            </Link>
+          </>)}
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleSignOut}>
           <LogOut />
