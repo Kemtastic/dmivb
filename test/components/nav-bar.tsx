@@ -143,7 +143,16 @@ export default function NavBar() {
                 </svg>
               </button>
             </div>
-            {user && <UserButton user={user as User} />}
+            {user ? (
+              <UserButton user={user as User} />
+            ) : (
+              <Link
+                href="/sign-in"
+                className="bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 rounded-md font-medium transition-colors"
+              >
+                Giriş Yap
+              </Link>
+            )}
           </div>
         )}
       </nav>
