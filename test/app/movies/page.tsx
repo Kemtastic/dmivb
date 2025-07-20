@@ -22,6 +22,7 @@ export default async function MoviesPage() {
               placeholder="Filmler içinde ara..."
               className="w-full"
               showSearchButton={false}
+              contentType="FILM"
             />
           </div>
         </div>

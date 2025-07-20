@@ -12,6 +12,7 @@ interface SearchBarProps {
   defaultValue?: string
   className?: string
   showSearchButton?: boolean
+  contentType?: 'FILM' | 'DIZI' // Yeni prop: hangi tür içerik aranacağını belirtir
 }
 
 export const SearchBar = ({ 
@@ -19,7 +20,8 @@ export const SearchBar = ({
   onSearch,
   defaultValue = "",
   className = "",
-  showSearchButton = true
+  showSearchButton = true,
+  contentType // Yeni prop
 }: SearchBarProps) => {
   const [query, setQuery] = useState(defaultValue)
   const router = useRouter()
@@ -30,7 +32,14 @@ export const SearchBar = ({
     } else {
       // Default behavior: navigate to search page
       if (searchQuery.trim()) {
-        router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`)
+        let searchUrl = `/search?q=${encodeURIComponent(searchQuery.trim())}`
+        
+        // Eğer contentType belirtilmişse, type parametresini ekle
+        if (contentType) {
+          searchUrl += `&type=${contentType}`
+        }
+        
+        router.push(searchUrl)
       }
     }
   }
