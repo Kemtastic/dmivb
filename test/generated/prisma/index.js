@@ -288,7 +288,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\PC\\Desktop\\dev\\20-07-2025_dmivb\\dmivb\\test\\generated\\prisma",
+      "value": "C:\\Users\\PC\\Desktop\\dev\\21_07_2025\\dmivb\\test\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -302,7 +302,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\PC\\Desktop\\dev\\20-07-2025_dmivb\\dmivb\\test\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\PC\\Desktop\\dev\\21_07_2025\\dmivb\\test\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {

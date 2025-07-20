@@ -1,19 +1,71 @@
+"use client"
+
 import Head from "next/head";
 import CarouselSection from "@/components/carousel-slide";
-import { getAllContents } from "@/lib/db/queries";
+import { fetchAllContents } from "@/lib/fetcher";
 import ContentRatingBadge from "@/components/content-rating-badge";
 import Image from "next/image";
 import Link from "next/link";
-import type { Metadata } from 'next'
+import { useState, useEffect } from "react";
 
-export const metadata: Metadata = {
-  title: 'DMIVb - Your Media Bases',
+interface Content {
+  id: string;
+  title: string;
+  type: string;
+  releaseYear: number;
+  image: string | null;
 }
 
-export default async function Home() {
-  const data = await getAllContents();
+export default function Home() {
+  const [data, setData] = useState<Content[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    const loadContents = async () => {
+      try {
+        setLoading(true);
+        const contents = await fetchAllContents();
+        setData(contents);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Bir hata oluştu');
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    loadContents();
+  }, []);
+
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-[#161515] text-gray-800">
+        <CarouselSection />
+        <div className="container mx-auto p-8">
+          <h2 className="text-white text-xl font-bold mb-6">Tüm İçerikler</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+            {Array.from({ length: 12 }).map((_, i) => (
+              <div key={i} className="aspect-[2/3] bg-gray-800 rounded-lg animate-pulse" />
+            ))}
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className="min-h-screen bg-[#161515] text-gray-800">
+        <CarouselSection />
+        <div className="container mx-auto p-8">
+          <h2 className="text-white text-xl font-bold mb-6">Tüm İçerikler</h2>
+          <div className="text-center text-red-500 py-8">
+            Hata: {error}
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-[#161515] text-gray-800">
