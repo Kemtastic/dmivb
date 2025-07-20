@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { SearchBar } from "@/components/search/search-bar"
 import { SearchFilters } from "@/components/search/search-filters"
@@ -20,7 +20,7 @@ interface SearchFilters {
   director?: string
 }
 
-export default function SearchPage() {
+function SearchContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   
@@ -298,5 +298,20 @@ export default function SearchPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#161515] text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-white mx-auto mb-4"></div>
+          <p>Sayfa yükleniyor...</p>
+        </div>
+      </div>
+    }>
+      <SearchContent />
+    </Suspense>
   )
 } 
