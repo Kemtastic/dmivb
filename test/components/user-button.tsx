@@ -93,6 +93,9 @@ export const UserButton = ({ user }: { user: User }) => {
         <Link href={Routes.Pages.App.Profile}>
           <DropdownMenuItem>Profil</DropdownMenuItem>
         </Link>
+        <Link href={Routes.Pages.App.Favorites}>
+          <DropdownMenuItem>Favorilerim</DropdownMenuItem>
+        </Link>
 
         {user.role == 'admin' && (
           <>

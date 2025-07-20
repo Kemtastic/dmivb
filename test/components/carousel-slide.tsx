@@ -37,7 +37,7 @@ export default function CarouselSlide() {
   }
 
   return (
-    <div className="bg-[#161515] min-h-screen p-8">
+    <div className="bg-[#161515] p-8">
       <h2 className="text-white text-base font-bold mb-4 font-sans">
         Trending Now
       </h2>

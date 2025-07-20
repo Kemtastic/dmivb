@@ -100,3 +100,605 @@ export async function deleteContentByAdmin(id: string) {
     throw new Error("İçerik silinirken bir hata oluştu")
   }
 }
+
+export async function getAllContents() {
+  try {
+    return await db.content.findMany({
+      orderBy: {
+        createdAt: 'desc'
+      }
+    })
+  } catch (error) {
+    throw new Error("İçerikler getirilirken bir hata oluştu")
+  }
+}
+
+export async function getContentById(id: string) {
+  try {
+    return await db.content.findUnique({
+      where: { id },
+      include: {
+        addedBy: {
+          select: {
+            name: true,
+            email: true
+          }
+        }
+      }
+    })
+  } catch (error) {
+    throw new Error("İçerik getirilirken bir hata oluştu")
+  }
+}
+
+export async function getMovieById(id: string) {
+  try {
+    return await db.content.findFirst({
+      where: { 
+        id,
+        type: ContentType.FILM
+      }
+    })
+  } catch (error) {
+    throw new Error("Film getirilirken bir hata oluştu")
+  }
+}
+
+export async function getSeriesById(id: string) {
+  try {
+    return await db.content.findFirst({
+      where: { 
+        id,
+        type: ContentType.DIZI
+      }
+    })
+  } catch (error) {
+    throw new Error("Dizi getirilirken bir hata oluştu")
+  }
+}
+
+// Favorites operations
+export async function addToFavorites(userId: string, contentId: string) {
+  try {
+    return await db.favorite.create({
+      data: {
+        userId,
+        contentId
+      }
+    })
+  } catch (error) {
+    throw new Error("Favorilere eklenirken bir hata oluştu")
+  }
+}
+
+export async function removeFromFavorites(userId: string, contentId: string) {
+  try {
+    return await db.favorite.delete({
+      where: {
+        userId_contentId: {
+          userId,
+          contentId
+        }
+      }
+    })
+  } catch (error) {
+    throw new Error("Favorilerden çıkarılırken bir hata oluştu")
+  }
+}
+
+export async function isContentFavorited(userId: string, contentId: string) {
+  try {
+    const favorite = await db.favorite.findUnique({
+      where: {
+        userId_contentId: {
+          userId,
+          contentId
+        }
+      }
+    })
+    return !!favorite
+  } catch (error) {
+    throw new Error("Favori durumu kontrol edilirken bir hata oluştu")
+  }
+}
+
+export async function getUserFavorites(userId: string) {
+  try {
+    return await db.favorite.findMany({
+      where: { userId },
+      include: {
+        content: true
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    })
+  } catch (error) {
+    throw new Error("Kullanıcı favorileri getirilirken bir hata oluştu")
+  }
+}
+
+export async function getContentFavoriteCount(contentId: string) {
+  try {
+    return await db.favorite.count({
+      where: { contentId }
+    })
+  } catch (error) {
+    throw new Error("Favori sayısı getirilirken bir hata oluştu")
+  }
+}
+
+// Watched operations
+export async function addToWatched(userId: string, contentId: string) {
+  try {
+    return await db.watched.create({
+      data: {
+        userId,
+        contentId
+      }
+    })
+  } catch (error) {
+    throw new Error("İzlenenlere eklenirken bir hata oluştu")
+  }
+}
+
+export async function removeFromWatched(userId: string, contentId: string) {
+  try {
+    return await db.watched.delete({
+      where: {
+        userId_contentId: {
+          userId,
+          contentId
+        }
+      }
+    })
+  } catch (error) {
+    throw new Error("İzlenenlerden çıkarılırken bir hata oluştu")
+  }
+}
+
+export async function isContentWatched(userId: string, contentId: string) {
+  try {
+    const watched = await db.watched.findUnique({
+      where: {
+        userId_contentId: {
+          userId,
+          contentId
+        }
+      }
+    })
+    return !!watched
+  } catch (error) {
+    throw new Error("İzlenme durumu kontrol edilirken bir hata oluştu")
+  }
+}
+
+export async function getUserWatched(userId: string) {
+  try {
+    return await db.watched.findMany({
+      where: { userId },
+      include: {
+        content: true
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    })
+  } catch (error) {
+    throw new Error("Kullanıcı izlenenleri getirilirken bir hata oluştu")
+  }
+}
+
+export async function getContentWatchedCount(contentId: string) {
+  try {
+    return await db.watched.count({
+      where: { contentId }
+    })
+  } catch (error) {
+    throw new Error("İzlenme sayısı getirilirken bir hata oluştu")
+  }
+}
+
+// List operations
+export async function createList(data: {
+  name: string
+  description?: string
+  isPublic: boolean
+  userId: string
+}) {
+  try {
+    return await db.list.create({
+      data: {
+        name: data.name,
+        description: data.description,
+        isPublic: data.isPublic,
+        userId: data.userId,
+      },
+      include: {
+        listItems: {
+          include: {
+            content: true
+          }
+        },
+        user: {
+          select: {
+            id: true,
+            name: true,
+            image: true
+          }
+        }
+      }
+    })
+  } catch (error) {
+    throw new Error("Liste oluşturulurken bir hata oluştu")
+  }
+}
+
+export async function getUserLists(userId: string) {
+  try {
+    return await db.list.findMany({
+      where: { userId },
+      include: {
+        listItems: {
+          include: {
+            content: true
+          }
+        },
+        _count: {
+          select: {
+            listItems: true
+          }
+        }
+      },
+      orderBy: {
+        updatedAt: 'desc'
+      }
+    })
+  } catch (error) {
+    throw new Error("Kullanıcı listeleri getirilirken bir hata oluştu")
+  }
+}
+
+export async function getListById(listId: string, userId?: string) {
+  try {
+    const list = await db.list.findUnique({
+      where: { id: listId },
+      include: {
+        listItems: {
+          include: {
+            content: true
+          },
+          orderBy: {
+            createdAt: 'desc'
+          }
+        },
+        user: {
+          select: {
+            id: true,
+            name: true,
+            image: true
+          }
+        },
+        _count: {
+          select: {
+            listItems: true
+          }
+        }
+      }
+    })
+
+    // Check if list exists and is accessible
+    if (!list) {
+      return null
+    }
+
+    // If list is private and user is not the owner, return null
+    if (!list.isPublic && (!userId || list.userId !== userId)) {
+      return null
+    }
+
+    return list
+  } catch (error) {
+    throw new Error("Liste getirilirken bir hata oluştu")
+  }
+}
+
+export async function updateList(listId: string, userId: string, data: {
+  name?: string
+  description?: string
+  isPublic?: boolean
+}) {
+  try {
+    return await db.list.update({
+      where: {
+        id: listId,
+        userId: userId // Ensure user owns the list
+      },
+      data: {
+        name: data.name,
+        description: data.description,
+        isPublic: data.isPublic,
+        updatedAt: new Date()
+      },
+      include: {
+        listItems: {
+          include: {
+            content: true
+          }
+        },
+        user: {
+          select: {
+            id: true,
+            name: true,
+            image: true
+          }
+        }
+      }
+    })
+  } catch (error) {
+    throw new Error("Liste güncellenirken bir hata oluştu")
+  }
+}
+
+export async function deleteList(listId: string, userId: string) {
+  try {
+    return await db.list.delete({
+      where: {
+        id: listId,
+        userId: userId // Ensure user owns the list
+      }
+    })
+  } catch (error) {
+    throw new Error("Liste silinirken bir hata oluştu")
+  }
+}
+
+export async function addContentToList(listId: string, contentId: string, userId: string) {
+  try {
+    // First check if user owns the list
+    const list = await db.list.findUnique({
+      where: { id: listId, userId }
+    })
+
+    if (!list) {
+      throw new Error("Liste bulunamadı veya yetkiniz yok")
+    }
+
+    // Check if content is already in the list
+    const existingItem = await db.listItem.findUnique({
+      where: {
+        listId_contentId: {
+          listId,
+          contentId
+        }
+      }
+    })
+
+    if (existingItem) {
+      throw new Error("Bu içerik zaten listede mevcut")
+    }
+
+    return await db.listItem.create({
+      data: {
+        listId,
+        contentId
+      },
+      include: {
+        content: true,
+        list: true
+      }
+    })
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : "İçerik listeye eklenirken bir hata oluştu")
+  }
+}
+
+export async function removeContentFromList(listId: string, contentId: string, userId: string) {
+  try {
+    // First check if user owns the list
+    const list = await db.list.findUnique({
+      where: { id: listId, userId }
+    })
+
+    if (!list) {
+      throw new Error("Liste bulunamadı veya yetkiniz yok")
+    }
+
+    return await db.listItem.delete({
+      where: {
+        listId_contentId: {
+          listId,
+          contentId
+        }
+      }
+    })
+  } catch (error) {
+    throw new Error("İçerik listeden çıkarılırken bir hata oluştu")
+  }
+}
+
+export async function getPublicLists(limit: number = 20) {
+  try {
+    return await db.list.findMany({
+      where: { isPublic: true },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            image: true
+          }
+        },
+        listItems: {
+          include: {
+            content: true
+          }
+        },
+        _count: {
+          select: {
+            listItems: true
+          }
+        }
+      },
+      orderBy: {
+        updatedAt: 'desc'
+      },
+      take: limit
+    })
+  } catch (error) {
+    throw new Error("Halka açık listeler getirilirken bir hata oluştu")
+  }
+}
+
+export async function isContentInList(listId: string, contentId: string) {
+  try {
+    const listItem = await db.listItem.findUnique({
+      where: {
+        listId_contentId: {
+          listId,
+          contentId
+        }
+      }
+    })
+    return !!listItem
+  } catch (error) {
+    throw new Error("Liste durumu kontrol edilirken bir hata oluştu")
+  }
+}
+
+// Search and filter operations
+export async function searchContents(filters: {
+  query?: string
+  type?: ContentType | 'ALL'
+  genres?: string[]
+  platforms?: Platform[]
+  yearRange?: { min?: number; max?: number }
+  director?: string
+}) {
+  try {
+    const whereClause: any = {}
+
+    // Text search in title, director, actors
+    if (filters.query) {
+      whereClause.OR = [
+        { title: { contains: filters.query, mode: 'insensitive' } },
+        { director: { contains: filters.query, mode: 'insensitive' } },
+        { actors: { hasSome: [filters.query] } },
+        { summary: { contains: filters.query, mode: 'insensitive' } }
+      ]
+    }
+
+    // Content type filter
+    if (filters.type && filters.type !== 'ALL') {
+      whereClause.type = filters.type
+    }
+
+    // Genre filter
+    if (filters.genres && filters.genres.length > 0) {
+      whereClause.genres = { hasSome: filters.genres }
+    }
+
+    // Platform filter
+    if (filters.platforms && filters.platforms.length > 0) {
+      whereClause.platform = { in: filters.platforms }
+    }
+
+    // Year range filter
+    if (filters.yearRange) {
+      whereClause.releaseYear = {}
+      if (filters.yearRange.min) {
+        whereClause.releaseYear.gte = filters.yearRange.min
+      }
+      if (filters.yearRange.max) {
+        whereClause.releaseYear.lte = filters.yearRange.max
+      }
+    }
+
+    // Director filter
+    if (filters.director) {
+      whereClause.director = { contains: filters.director, mode: 'insensitive' }
+    }
+
+    return await db.content.findMany({
+      where: whereClause,
+      orderBy: [
+        { createdAt: 'desc' }
+      ],
+      include: {
+        addedBy: {
+          select: {
+            name: true
+          }
+        }
+      }
+    })
+  } catch (error) {
+    console.error('Search error:', error)
+    throw new Error("Arama yapılırken bir hata oluştu")
+  }
+}
+
+// Get unique genres from all content
+export async function getAllGenres() {
+  try {
+    const contents = await db.content.findMany({
+      select: { genres: true }
+    })
+    
+    const allGenres = contents.flatMap(content => content.genres)
+    const uniqueGenres = [...new Set(allGenres)].sort()
+    
+    return uniqueGenres
+  } catch (error) {
+    throw new Error("Türler getirilirken bir hata oluştu")
+  }
+}
+
+// Get content by genre
+export async function getContentsByGenre(genre: string) {
+  try {
+    return await db.content.findMany({
+      where: {
+        genres: { has: genre }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    })
+  } catch (error) {
+    throw new Error("Tür bazlı içerikler getirilirken bir hata oluştu")
+  }
+}
+
+// Get content by type (FILM or DIZI)
+export async function getContentsByType(type: ContentType, sortBy: 'releaseYear' | 'createdAt' = 'createdAt', sortOrder: 'asc' | 'desc' = 'desc') {
+  try {
+    return await db.content.findMany({
+      where: { type },
+      orderBy: {
+        [sortBy]: sortOrder
+      }
+    })
+  } catch (error) {
+    throw new Error("Tip bazlı içerikler getirilirken bir hata oluştu")
+  }
+}
+
+// Get content by year range
+export async function getContentsByYearRange(minYear: number, maxYear: number) {
+  try {
+    return await db.content.findMany({
+      where: {
+        releaseYear: {
+          gte: minYear,
+          lte: maxYear
+        }
+      },
+      orderBy: {
+        releaseYear: 'desc'
+      }
+    })
+  } catch (error) {
+    throw new Error("Yıl bazlı içerikler getirilirken bir hata oluştu")
+  }
+}
