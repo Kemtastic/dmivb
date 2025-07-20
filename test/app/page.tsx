@@ -3,6 +3,11 @@ import CarouselSection from "@/components/carousel-slide";
 import { getAllContents } from "@/lib/db/queries";
 import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'DMIVb - Your Media Bases',
+}
 
 export default async function Home() {
   const data = await getAllContents();
@@ -23,10 +28,6 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen bg-[#161515] text-gray-800">
-      <Head>
-        <title>DMIVb - Your Media Bases</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
       <CarouselSection />
       <div className="container mx-auto p-8">
         <h2 className="text-white text-xl font-bold mb-6">Tüm İçerikler</h2>

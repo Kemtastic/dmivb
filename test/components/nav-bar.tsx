@@ -67,23 +67,7 @@ export default function NavBar() {
                     className="font-medium text-white flex items-center gap-1"
                   >
                     {item.title}
-                    {item.subLinks && <ChevronDown className="w-4 h-4 ml-1" />}
                   </Link>
-                  {item.subLinks && (
-                    <div className="absolute left-0 top-4 mt-2 w-48 bg-black rounded-md shadow-lg hidden group-hover:block z-10">
-                      <div className="p-4 space-y-2">
-                        {item.subLinks.map((subItem, subIndex) => (
-                          <Link
-                            key={subIndex}
-                            href={subItem.href}
-                            className="block text-white hover:text-yellow-300"
-                          >
-                            {subItem.title}
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  )}
                 </div>
               ))}
             </div>
