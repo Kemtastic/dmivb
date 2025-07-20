@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 
-export default function RatingSection({ movieId }: { movieId: number }) {
+export default function RatingSection({ movieId }: { movieId: string }) {
   const [selectedRating, setSelectedRating] = useState(0)
 
   const handleRatingClick = (rating: number) => {

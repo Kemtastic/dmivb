@@ -1,0 +1,169 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id            String     @id
+  name          String
+  email         String
+  emailVerified Boolean
+  image         String?
+  createdAt     DateTime
+  updatedAt     DateTime
+  sessions      Session[]
+  accounts      Account[]
+  contents      Content[]
+  favorites     Favorite[]
+  lists         List[]
+  watched       Watched[]
+  bio           String?
+  location      String?
+  twitter       String?
+  instagram     String?
+  role          String?
+  banned        Boolean?
+  banReason     String?
+  banExpires    DateTime?
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  impersonatedBy String?
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@map("verification")
+}
+
+enum ContentType {
+  FILM
+  DIZI
+}
+
+enum Platform {
+  NETFLIX
+  PRIME
+  HBO
+  DISNEY
+}
+
+model Content {
+  id          String      @id @default(cuid())
+  title       String
+  summary     String
+  type        ContentType
+  releaseYear Int
+  trailerUrl  String?
+  image       String?
+  director    String
+  actors      String[]
+  genres      String[]
+  platform    Platform
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  addedBy     User        @relation(fields: [addedById], references: [id])
+  addedById   String
+  favorites   Favorite[]
+  listItems   ListItem[]
+  watched     Watched[]
+
+  @@map("content")
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  content   Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  contentId String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, contentId])
+  @@map("favorite")
+}
+
+model Watched {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  content   Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  contentId String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, contentId])
+  @@map("watched")
+}
+
+model List {
+  id          String     @id @default(cuid())
+  name        String
+  description String?
+  isPublic    Boolean    @default(false)
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  listItems   ListItem[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@map("list")
+}
+
+model ListItem {
+  id        String   @id @default(cuid())
+  list      List     @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId    String
+  content   Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  contentId String
+  createdAt DateTime @default(now())
+
+  @@unique([listId, contentId])
+  @@map("list_item")
+}

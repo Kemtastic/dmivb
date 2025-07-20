@@ -1,8 +1,12 @@
 import YT from "@/components/youtube-embed"
-import { movies } from "@/lib/data"
+import { getMovieById } from "@/lib/db/queries"
 import RatingSection from "@/components/RatingSection"
 import CommentSection from "@/components/comment-section"
+import FavoriteButton from "@/components/favorite-button"
+import AddToListButton from "@/components/lists/add-to-list-button"
+import WatchedButton from "@/components/watched-button"
 import Image from "next/image"
+import { notFound } from "next/navigation"
 
 export default async function MovieDetailsPage({
   params,
@@ -10,10 +14,10 @@ export default async function MovieDetailsPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const movie = movies.find((movie) => movie.id === parseInt(id))
+  const movie = await getMovieById(id)
 
   if (!movie) {
-    return <div>Film bulunamadı</div>
+    notFound()
   }
 
   return (
@@ -23,17 +27,21 @@ export default async function MovieDetailsPage({
         <div className="md:w-1/2 flex flex-col gap-6">
           {/* Poster */}
           <div className="relative aspect-[2/3] w-full rounded-lg overflow-hidden shadow-lg">
-            <img
-              src={movie.img}
+            <Image
+              src={movie.image || "/placeholder-movie.jpg"}
               alt={movie.title}
               className="object-cover w-full h-full"
+              width={500}
+              height={500}
             />
           </div>
 
           {/* Trailer */}
-          <div className="aspect-video w-full rounded-lg overflow-hidden shadow-lg">
-            <YT id={movie.trailer} />
-          </div>
+          {movie.trailerUrl && (
+            <div className="aspect-video w-full rounded-lg overflow-hidden shadow-lg">
+              <YT id={movie.trailerUrl} />
+            </div>
+          )}
         </div>
 
         {/* Right side - Movie details */}
@@ -43,22 +51,20 @@ export default async function MovieDetailsPage({
           <div className="flex items-center gap-2 text-sm mb-6 text-gray-600">
             <span>{movie.releaseYear}</span>
             <span>•</span>
-            <span className="capitalize">{movie.platform}</span>
+            <span className="capitalize">{movie.platform.toLowerCase()}</span>
             <span>•</span>
-            <span>{movie.type === "movie" ? "Film" : "Dizi"}</span>
+            <span>Film</span>
           </div>
 
-          {/* Score */}
+          {/* Score - Note: Score field doesn't exist in new schema, using placeholder */}
           <div className="mb-8">
             <div className="flex items-center gap-4">
               <div className="bg-yellow-500 w-16 h-16 rounded-full flex items-center justify-center">
-                <span className="text-3xl font-bold text-white">
-                  {movie.score}
-                </span>
+                <span className="text-3xl font-bold text-white">-</span>
               </div>
               <div>
                 <p className="text-lg font-semibold">Kullanıcı Puanı</p>
-                <p className="text-sm text-gray-600">Toplam puan</p>
+                <p className="text-sm text-gray-600">Henüz puanlanmamış</p>
               </div>
             </div>
           </div>
@@ -66,7 +72,7 @@ export default async function MovieDetailsPage({
           {/* Description */}
           <div className="mb-8">
             <h2 className="text-xl font-semibold mb-2">Özet</h2>
-            <p className="text-gray-700 leading-relaxed">{movie.description}</p>
+            <p className="text-gray-700 leading-relaxed">{movie.summary}</p>
           </div>
 
           {/* Credits */}
@@ -79,13 +85,20 @@ export default async function MovieDetailsPage({
               </div>
               <div>
                 <h3 className="text-sm font-medium text-gray-500">Oyuncular</h3>
-                <p className="mt-1">{movie.cast.join(", ")}</p>
+                <p className="mt-1">{movie.actors.join(", ")}</p>
               </div>
               <div>
                 <h3 className="text-sm font-medium text-gray-500">Türler</h3>
                 <p className="mt-1">{movie.genres.join(", ")}</p>
               </div>
             </div>
+          </div>
+
+          {/* Action buttons */}
+          <div className="mb-8 flex items-center gap-4">
+            <FavoriteButton contentId={movie.id} />
+            <AddToListButton contentId={movie.id} />
+            <WatchedButton contentId={movie.id} />
           </div>
 
           {/* Rating section */}

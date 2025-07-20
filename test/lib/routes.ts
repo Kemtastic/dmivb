@@ -8,6 +8,8 @@ export const Routes = {
     App: {
       Home: '/app/home',
       Profile: '/app/profile',
+      Favorites: '/app/favorites',
+      Lists: '/app/lists',
       User: {
         Settings: '/app/profile/settings'
       },
