@@ -22,6 +22,7 @@ export default async function SeriesPage() {
               placeholder="Diziler içinde ara..."
               className="w-full"
               showSearchButton={false}
+              contentType="DIZI"
             />
           </div>
         </div>
