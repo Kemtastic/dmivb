@@ -1,6 +1,7 @@
 import Head from "next/head";
 import CarouselSection from "@/components/carousel-slide";
 import { getAllContents } from "@/lib/db/queries";
+import ContentRatingBadge from "@/components/content-rating-badge";
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from 'next'
@@ -12,19 +13,7 @@ export const metadata: Metadata = {
 export default async function Home() {
   const data = await getAllContents();
 
-  // Deterministik fake kullanıcı puanları üretme fonksiyonu (content ID'sine göre)
-  const generateFakeUserRating = (contentId: string) => {
-    // Content ID'sini kullanarak deterministik bir değer üret
-    let hash = 0;
-    for (let i = 0; i < contentId.length; i++) {
-      const char = contentId.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
-      hash = hash & hash; // 32bit integer'a çevir
-    }
-    // Hash'i 6.0-10.0 arasında bir değere çevir
-    const rating = 6 + (Math.abs(hash) % 40) / 10;
-    return rating.toFixed(1);
-  };
+
 
   return (
     <main className="min-h-screen bg-[#161515] text-gray-800">
@@ -59,8 +48,8 @@ export default async function Home() {
                     {content.releaseYear}
                   </p>
                   <div className="flex items-center">
-                    <div className="bg-yellow-500 text-black px-2 py-1 rounded text-xs font-bold">
-                      ★ {generateFakeUserRating(content.id)}
+                    <div className="bg-black/40 text-white px-2 py-1 rounded text-xs font-bold">
+                      <ContentRatingBadge contentId={content.id} variant="dark" />
                     </div>
                   </div>
                 </div>

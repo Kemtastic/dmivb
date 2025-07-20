@@ -5,6 +5,7 @@ import CommentSection from "@/components/comment-section"
 import FavoriteButton from "@/components/favorite-button"
 import AddToListButton from "@/components/lists/add-to-list-button"
 import WatchedButton from "@/components/watched-button"
+import AverageRatingDisplay from "@/components/average-rating-display"
 import Image from "next/image"
 import { notFound } from "next/navigation"
 
@@ -39,7 +40,7 @@ export default async function SeriesDetailsPage({
           {/* Trailer */}
           {series.trailerUrl && (
             <div className="aspect-video w-full rounded-lg overflow-hidden shadow-lg">
-              <YT id={series.trailerUrl} />
+              <YT url={series.trailerUrl} />
             </div>
           )}
         </div>
@@ -56,17 +57,9 @@ export default async function SeriesDetailsPage({
             <span>Dizi</span>
           </div>
 
-          {/* Score - Note: Score field doesn't exist in new schema, using placeholder */}
+          {/* Average Rating */}
           <div className="mb-8">
-            <div className="flex items-center gap-4">
-              <div className="bg-yellow-500 w-16 h-16 rounded-full flex items-center justify-center">
-                <span className="text-3xl font-bold text-white">-</span>
-              </div>
-              <div>
-                <p className="text-lg font-semibold">Kullanıcı Puanı</p>
-                <p className="text-sm text-gray-600">Henüz puanlanmamış</p>
-              </div>
-            </div>
+            <AverageRatingDisplay contentId={series.id} />
           </div>
 
           {/* Description */}
@@ -108,7 +101,7 @@ export default async function SeriesDetailsPage({
 
           {/* Comments */}
           <div>
-            <CommentSection />
+            <CommentSection contentId={series.id} />
           </div>
         </div>
       </div>

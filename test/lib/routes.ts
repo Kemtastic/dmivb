@@ -16,6 +16,7 @@ export const Routes = {
       Admin: {
         Contents: '/app/admin/content',
         NewContent: '/app/admin/content/create',
+        Reports: '/app/admin/reports',
       }
     }
   }

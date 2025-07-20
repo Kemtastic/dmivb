@@ -105,6 +105,9 @@ export const UserButton = ({ user }: { user: User }) => {
             <Link href={Routes.Pages.App.Admin.NewContent}>
               <DropdownMenuItem>İçerik oluştur</DropdownMenuItem>
             </Link>
+            <Link href={Routes.Pages.App.Admin.Reports}>
+              <DropdownMenuItem>Şikayetler</DropdownMenuItem>
+            </Link>
           </>)}
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleSignOut}>
