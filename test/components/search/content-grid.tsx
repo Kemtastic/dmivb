@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Content } from "@/generated/prisma"
+import ContentRatingBadge from "@/components/content-rating-badge"
 import { Calendar, Film, Tv, Star, Clock } from "lucide-react"
 
 interface ContentGridProps {
@@ -13,19 +14,7 @@ interface ContentGridProps {
 }
 
 export const ContentGrid = ({ contents, loading = false, emptyMessage = "İçerik bulunamadı" }: ContentGridProps) => {
-  // Deterministik fake kullanıcı puanları üretme fonksiyonu (content ID'sine göre)
-  const generateFakeUserRating = (contentId: string) => {
-    // Content ID'sini kullanarak deterministik bir değer üret
-    let hash = 0;
-    for (let i = 0; i < contentId.length; i++) {
-      const char = contentId.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
-      hash = hash & hash; // 32bit integer'a çevir
-    }
-    // Hash'i 6.0-10.0 arasında bir değere çevir
-    const rating = 6 + (Math.abs(hash) % 40) / 10;
-    return rating.toFixed(1);
-  }
+
 
   if (loading) {
     return (
@@ -118,10 +107,7 @@ export const ContentGrid = ({ contents, loading = false, emptyMessage = "İçeri
                   <Calendar className="w-3 h-3" />
                   {content.releaseYear}
                 </div>
-                <div className="flex items-center gap-1 text-yellow-400 text-xs">
-                  <Star className="w-3 h-3 fill-current" />
-                  {generateFakeUserRating(content.id)}
-                </div>
+                <ContentRatingBadge contentId={content.id} variant="dark" />
               </div>
 
               <div className="text-gray-300 text-xs mb-2">
@@ -153,10 +139,7 @@ export const ContentGrid = ({ contents, loading = false, emptyMessage = "İçeri
             </h4>
             <div className="flex items-center justify-between text-xs text-gray-400">
               <span>{content.releaseYear}</span>
-              <div className="flex items-center gap-1">
-                <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                {generateFakeUserRating(content.id)}
-              </div>
+              <ContentRatingBadge contentId={content.id} variant="light" />
             </div>
           </div>
         </Link>

@@ -223,6 +223,46 @@ exports.Prisma.ListItemScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.RatingScalarFieldEnum = {
+  id: 'id',
+  rating: 'rating',
+  userId: 'userId',
+  contentId: 'contentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CommentScalarFieldEnum = {
+  id: 'id',
+  text: 'text',
+  userId: 'userId',
+  contentId: 'contentId',
+  parentId: 'parentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CommentLikeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  commentId: 'commentId',
+  isLike: 'isLike',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.CommentReportScalarFieldEnum = {
+  id: 'id',
+  reason: 'reason',
+  details: 'details',
+  userId: 'userId',
+  commentId: 'commentId',
+  status: 'status',
+  reviewedBy: 'reviewedBy',
+  reviewedAt: 'reviewedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -258,7 +298,11 @@ exports.Prisma.ModelName = {
   Favorite: 'Favorite',
   Watched: 'Watched',
   List: 'List',
-  ListItem: 'ListItem'
+  ListItem: 'ListItem',
+  Rating: 'Rating',
+  Comment: 'Comment',
+  CommentLike: 'CommentLike',
+  CommentReport: 'CommentReport'
 };
 
 /**

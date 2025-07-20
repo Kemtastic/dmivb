@@ -1,7 +1,8 @@
 "use client";
 import React from 'react';
 
-const YT = ({ id }: { id: string }) => {
+const YT = ({ url }: { url: string }) => {
+  const id = url.split('v=')[1]
   return (
     <div className="relative w-full h-full">
       <iframe

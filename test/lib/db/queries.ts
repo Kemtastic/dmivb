@@ -65,6 +65,13 @@ export async function getContentsByAdmin() {
     throw new Error("Something went wrong")
   }
 }
+export async function getContentsByGuest() {
+  try {
+    return await db.content.findMany()
+  } catch (error) {
+    throw new Error("Something went wrong")
+  }
+}
 
 export async function updateContentByAdmin(id: string, data: {
   title: string
@@ -700,5 +707,339 @@ export async function getContentsByYearRange(minYear: number, maxYear: number) {
     })
   } catch (error) {
     throw new Error("Yıl bazlı içerikler getirilirken bir hata oluştu")
+  }
+}
+
+// ========================
+// RATING OPERATIONS
+// ========================
+
+// Get user's rating for specific content
+export async function getUserRating(userId: string, contentId: string) {
+  try {
+    return await db.rating.findUnique({
+      where: {
+        userId_contentId: {
+          userId,
+          contentId
+        }
+      }
+    })
+  } catch (error) {
+    throw new Error("Kullanıcı puanı getirilirken bir hata oluştu")
+  }
+}
+
+// Create or update user rating
+export async function upsertRating(userId: string, contentId: string, rating: number) {
+  try {
+    // Validate rating is between 1-10
+    if (rating < 1 || rating > 10) {
+      throw new Error("Puan 1-10 arasında olmalıdır")
+    }
+
+    return await db.rating.upsert({
+      where: {
+        userId_contentId: {
+          userId,
+          contentId
+        }
+      },
+      update: {
+        rating,
+        updatedAt: new Date()
+      },
+      create: {
+        userId,
+        contentId,
+        rating
+      }
+    })
+  } catch (error) {
+    throw new Error("Puan kaydedilirken bir hata oluştu")
+  }
+}
+
+// Delete user rating
+export async function deleteRating(userId: string, contentId: string) {
+  try {
+    return await db.rating.delete({
+      where: {
+        userId_contentId: {
+          userId,
+          contentId
+        }
+      }
+    })
+  } catch (error) {
+    throw new Error("Puan silinirken bir hata oluştu")
+  }
+}
+
+// Get average rating for content
+export async function getAverageRating(contentId: string) {
+  try {
+    const result = await db.rating.aggregate({
+      where: { contentId },
+      _avg: { rating: true },
+      _count: { rating: true }
+    })
+
+    return {
+      average: result._avg.rating ? Number(result._avg.rating.toFixed(1)) : null,
+      count: result._count.rating
+    }
+  } catch (error) {
+    throw new Error("Ortalama puan hesaplanırken bir hata oluştu")
+  }
+}
+
+// Get all ratings for content with user info
+export async function getContentRatings(contentId: string) {
+  try {
+    return await db.rating.findMany({
+      where: { contentId },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            image: true
+          }
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    })
+  } catch (error) {
+    throw new Error("İçerik puanları getirilirken bir hata oluştu")
+  }
+}
+
+// Get user's all ratings
+export async function getUserRatings(userId: string) {
+  try {
+    return await db.rating.findMany({
+      where: { userId },
+      include: {
+        content: {
+          select: {
+            id: true,
+            title: true,
+            type: true,
+            image: true,
+            releaseYear: true
+          }
+        }
+      },
+      orderBy: {
+        updatedAt: 'desc'
+      }
+    })
+  } catch (error) {
+    throw new Error("Kullanıcı puanları getirilirken bir hata oluştu")
+  }
+}
+
+// RECOMMENDATION ALGORITHM
+export async function getUserRecommendations(userId: string, limit: number = 6) {
+  try {
+    // Get user's watched content
+    const watchedContent = await db.watched.findMany({
+      where: { userId },
+      include: {
+        content: {
+          select: {
+            id: true,
+            genres: true,
+            type: true,
+            platform: true
+          }
+        }
+      }
+    })
+
+    // Get user's ratings (especially high ratings: 7+)
+    const userRatings = await db.rating.findMany({
+      where: { 
+        userId,
+        rating: { gte: 7 } // High ratings only
+      },
+      include: {
+        content: {
+          select: {
+            id: true,
+            genres: true,
+            type: true,
+            platform: true
+          }
+        }
+      }
+    })
+
+    // Extract watched content IDs to exclude them from recommendations
+    const watchedContentIds = watchedContent.map(w => w.content.id)
+
+    // Analyze preferred genres and types from high-rated content
+    const preferredGenres: { [key: string]: number } = {}
+    const preferredTypes: { [key: string]: number } = {}
+    const preferredPlatforms: { [key: string]: number } = {}
+
+    userRatings.forEach(rating => {
+      const content = rating.content
+      
+      // Count genres
+      content.genres.forEach(genre => {
+        preferredGenres[genre] = (preferredGenres[genre] || 0) + rating.rating
+      })
+
+      // Count types
+      preferredTypes[content.type] = (preferredTypes[content.type] || 0) + rating.rating
+
+      // Count platforms
+      preferredPlatforms[content.platform] = (preferredPlatforms[content.platform] || 0) + rating.rating
+    })
+
+    // If user has no high ratings, fall back to watched content analysis
+    if (userRatings.length === 0) {
+      watchedContent.forEach(watched => {
+        const content = watched.content
+        
+        content.genres.forEach(genre => {
+          preferredGenres[genre] = (preferredGenres[genre] || 0) + 1
+        })
+
+        preferredTypes[content.type] = (preferredTypes[content.type] || 0) + 1
+        preferredPlatforms[content.platform] = (preferredPlatforms[content.platform] || 0) + 1
+      })
+    }
+
+    // Get all content that user hasn't watched
+    const recommendations = await db.content.findMany({
+      where: {
+        id: {
+          notIn: watchedContentIds
+        }
+      },
+      select: {
+        id: true,
+        title: true,
+        type: true,
+        releaseYear: true,
+        trailerUrl: true,
+        director: true,
+        actors: true,
+        genres: true,
+        platform: true,
+        image: true,
+        summary: true,
+        createdAt: true,
+        updatedAt: true
+      }
+    })
+
+    // Score recommendations based on user preferences
+    const scoredRecommendations = recommendations.map(content => {
+      let score = 0
+
+      // Score based on genres
+      content.genres.forEach(genre => {
+        if (preferredGenres[genre]) {
+          score += preferredGenres[genre]
+        }
+      })
+
+      // Score based on type
+      if (preferredTypes[content.type]) {
+        score += preferredTypes[content.type] * 2 // Type preference is important
+      }
+
+      // Score based on platform
+      if (preferredPlatforms[content.platform]) {
+        score += preferredPlatforms[content.platform]
+      }
+
+      return {
+        ...content,
+        recommendationScore: score
+      }
+    })
+
+    // Sort by score and return top recommendations
+    const topRecommendations = scoredRecommendations
+      .sort((a, b) => b.recommendationScore - a.recommendationScore)
+      .slice(0, limit)
+
+    // If we don't have enough personalized recommendations, fill with popular content
+    if (topRecommendations.length < limit) {
+      const additionalContent = await db.content.findMany({
+        where: {
+          id: {
+            notIn: [
+              ...watchedContentIds,
+              ...topRecommendations.map(r => r.id)
+            ]
+          }
+        },
+        take: limit - topRecommendations.length,
+        orderBy: {
+          createdAt: 'desc' // Recent content as fallback
+        },
+        select: {
+          id: true,
+          title: true,
+          type: true,
+          releaseYear: true,
+          trailerUrl: true,
+          director: true,
+          actors: true,
+          genres: true,
+          platform: true,
+          image: true,
+          summary: true,
+          createdAt: true,
+          updatedAt: true
+        }
+      })
+
+      // Add fallback content with lower score
+      additionalContent.forEach(content => {
+        topRecommendations.push({
+          ...content,
+          recommendationScore: 0
+        })
+      })
+    }
+
+    return topRecommendations
+  } catch (error) {
+    console.error("Error getting recommendations:", error)
+    
+    // Fallback: return recent content if everything fails
+    return await db.content.findMany({
+      take: limit,
+      orderBy: {
+        createdAt: 'desc'
+      },
+      select: {
+        id: true,
+        title: true,
+        type: true,
+        releaseYear: true,
+        trailerUrl: true,
+        director: true,
+        actors: true,
+        genres: true,
+        platform: true,
+        image: true,
+        summary: true,
+        createdAt: true,
+        updatedAt: true
+      }
+    }).then(contents => contents.map(content => ({
+      ...content,
+      recommendationScore: 0
+    })))
   }
 }

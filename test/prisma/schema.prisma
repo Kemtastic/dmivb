@@ -23,6 +23,10 @@ model User {
   favorites     Favorite[]
   lists         List[]
   watched       Watched[]
+  ratings       Rating[]
+  comments      Comment[]
+  commentLikes  CommentLike[]
+  commentReports CommentReport[]
   bio           String?
   location      String?
   twitter       String?
@@ -114,6 +118,8 @@ model Content {
   favorites   Favorite[]
   listItems   ListItem[]
   watched     Watched[]
+  ratings     Rating[]
+  comments    Comment[]
 
   @@map("content")
 }
@@ -166,4 +172,67 @@ model ListItem {
 
   @@unique([listId, contentId])
   @@map("list_item")
+}
+
+model Rating {
+  id        String   @id @default(cuid())
+  rating    Int      // 1-10 rating scale
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  content   Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  contentId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, contentId])
+  @@map("rating")
+}
+
+model Comment {
+  id           String        @id @default(cuid())
+  text         String
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String
+  content      Content       @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  contentId    String
+  parentId     String?       // For reply comments
+  parent       Comment?      @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies      Comment[]     @relation("CommentReplies")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  commentLikes CommentLike[]
+  reports      CommentReport[]
+
+  @@map("comment")
+}
+
+model CommentLike {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId String
+  isLike    Boolean  // true for like, false for dislike
+  createdAt DateTime @default(now())
+
+  @@unique([userId, commentId])
+  @@map("comment_like")
+}
+
+model CommentReport {
+  id        String   @id @default(cuid())
+  reason    String   // Report reason (spam, hate speech, inappropriate, etc.)
+  details   String?  // Optional additional details from reporter
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String   // User who reported the comment
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId String
+  status    String   @default("pending") // pending, reviewed, dismissed, action_taken
+  reviewedBy String? // Admin who reviewed the report
+  reviewedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, commentId]) // Prevent duplicate reports from same user
+  @@map("comment_report")
 }
