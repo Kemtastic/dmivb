@@ -17,14 +17,6 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "DMIVb",
   description: "Doğru yerdesin - Film ve dizi takip platformu",
-  icons: {
-    icon: [
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      }
-    ],
-  },
 };
 
 export default function RootLayout({
