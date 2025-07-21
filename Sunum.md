@@ -1,2 +1,3 @@
 -[Kemal Ayan Video Sunum](https://www.youtube.com/watch?v=WVJg87axG1g)
--[Ensar SARIKAYA Video Sunum](https://www.youtube.com/watch?v=w68IW8Rn0nY)
+
+[Ensar SARIKAYA Video Sunum](https://www.youtube.com/watch?v=w68IW8Rn0nY)
