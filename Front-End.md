@@ -10,15 +10,15 @@ https://dmivb.vercel.app
 7. Admin İçerik Düzenle
 
 # Ensar SARIKAYA Frontend #
-1. Navbar Design
-   
-3. Navbar Links - Navbar Logo
-4. Search Bar
-5. Movies and Series Carousel Slider
-6. Movies/Series Page Tasarim
-7. Fragman Izleme (Youtube Embedded)
-8. Icerik Puanlama
-9. Yorum Yapma
-10. Yorum Begenme
-11. Yorum Yanitlama
-12. Oneri Sunma
+https://www.youtube.com/watch?v=As5ryg0lP9Y
+1. Navbar Design   
+2. Navbar Links - Navbar Logo
+3. Search Bar
+4. Movies and Series Carousel Slider
+5. Movies/Series Page Tasarim
+6. Fragman Izleme (Youtube Embedded)
+7. Icerik Puanlama
+8. Yorum Yapma
+9. Yorum Begenme
+10. Yorum Yanitlama
+11. Oneri Sunma
